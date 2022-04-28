@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+# Copyright © 2022 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+import argparse
+import sys
+
+import lxml.html.builder
+
+h_head='''
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+'''.strip()
+
+h_tail='''
+</body>
+</html>
+'''.strip()
+
+def hprint(elt):
+    s = lxml.html.tostring(elt, encoding='UTF-8')
+    sys.stdout.buffer.write(s)
+    sys.stdout.buffer.write(b'\n')
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('paths', metavar='FILE', nargs='+')
+    opts = ap.parse_args()
+    print(h_head, flush=True)
+    for path in opts.paths:
+        doc = lxml.html.parse(path)
+        title = doc.find('//head/title').text
+        h1 = lxml.html.builder.H1(title)
+        h1.attrib['data-origin'] = path
+        hprint(h1)
+        body = doc.find('body')
+        body.tag = 'div'
+        body.attrib['data-tag'] = 'body'
+        hprint(body)
+    print(h_tail)
+
+if __name__ == '__main__':
+    main()
+
+# vim:ts=4 sts=4 sw=4 et

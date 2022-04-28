@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+
+# Copyright © 2022 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+import os
+import argparse
+import sys
+
+import lxml.html.builder
+
+h_head='''
+<head>
+</head>
+'''.strip()
+
+h_tail='''
+</html>
+'''.strip()
+
+def main():
+    hb =lxml.html.builder
+    ap = argparse.ArgumentParser()
+    ap.parse_args()
+    doc = lxml.html.parse(sys.stdin.buffer)
+    body = doc.find('//body')
+    path = None
+    e_head = None
+    for elt in body:
+        if elt.tag == 'h1':
+            path = elt.attrib['data-origin']
+            if set(path.split('/')) & {'', '.', '..'}:
+                raise RuntimeError(f'bad path: {path!r}')
+            os.makedirs(os.path.dirname(path) or '.', exist_ok=True)
+            e_head = hb.HEAD(
+                hb.META(http_equiv='Content-Type', content='text/html; charset=UTF-8'),
+                hb.TITLE(elt.text),
+            )
+            e_head.text = '\n'
+            e_head.tail = '\n'
+            for elt in e_head:
+                elt.tail = '\n'
+            continue
+        elif elt.tag == 'div' and elt.attrib.get('data-tag') == 'body':
+            del elt.attrib['data-tag']
+            e_body = elt
+            e_body.tag = 'body'
+            with open(path, 'wt', encoding='UTF-8') as file:
+                print('<html>', file=file, flush=True)
+                for elt in e_head, e_body:
+                    s = lxml.html.tostring(elt, encoding='UTF-8')
+                    file.buffer.write(s)
+                e_head = e_body = None
+                print('</html>', file=file)
+            continue
+        raise RuntimeError(f'unexpected element: {elt.tag!r}')
+
+if __name__ == '__main__':
+    main()
+
+# vim:ts=4 sts=4 sw=4 et
