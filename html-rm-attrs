@@ -22,9 +22,8 @@ def main():
             with contextlib.suppress(KeyError):
                 del elt.attrib[attr]
     html = lxml.html.tostring(doc, encoding='UTF-8')
-    sys.stdout.buffer.write(html)
-    if html[-1] != '\n':
-        sys.stdout.buffer.write(b'\n')
+    doc.write(sys.stdout.buffer)
+    sys.stdout.buffer.write(b'\n')
 
 if __name__ == '__main__':
     main()
