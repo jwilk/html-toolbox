@@ -34,7 +34,12 @@ def main():
     print(h_head, flush=True)
     for path in opts.paths:
         doc = lxml.html.parse(path)
-        title = doc.find('//head/title').text
+        title_elt = doc.find('//head/title')
+        if title_elt is None:
+            print(f'{path}: <title> element not found', file=sys.stderr)
+            title = ''
+        else:
+            title = title_elt.text
         h1 = lxml.html.builder.H1(title)
         h1.attrib['data-origin'] = path
         hprint(h1)
