@@ -35,7 +35,8 @@ def main():
     opts = ap.parse_args()
     print(h_head, flush=True)
     for path in opts.paths:
-        doc = lxml.html.parse(path)
+        with open(path, 'rb') as fp:
+            doc = lxml.html.parse(fp)
         title_elt = doc.find('//head/title')
         if title_elt is None:
             print(f'{path}: <title> element not found', file=sys.stderr)
