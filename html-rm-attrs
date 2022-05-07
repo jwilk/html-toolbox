@@ -22,7 +22,7 @@ def main():
             with contextlib.suppress(KeyError):
                 del elt.attrib[attr]
     html = lxml.html.tostring(doc, encoding='UTF-8')
-    doc.write(sys.stdout.buffer)
+    doc.write(sys.stdout.buffer, encoding='UTF-8')
     sys.stdout.buffer.write(b'\n')
 
 if __name__ == '__main__':
