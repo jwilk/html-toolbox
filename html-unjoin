@@ -21,7 +21,7 @@ h_tail='''
 '''.strip()
 
 def main():
-    hb =lxml.html.builder
+    hb = lxml.html.builder
     ap = argparse.ArgumentParser()
     ap.parse_args()
     doc = lxml.html.parse(sys.stdin.buffer)
