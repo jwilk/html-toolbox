@@ -31,6 +31,8 @@ def main():
     for elt in body:
         if elt.tag == 'h1':
             path = elt.attrib['data-origin']
+            if path[:2] == './':
+                path = path[2:]
             if set(path.split('/')) & {'', '.', '..'}:
                 raise RuntimeError(f'bad path: {path!r}')
             os.makedirs(os.path.dirname(path) or '.', exist_ok=True)
