@@ -11,12 +11,12 @@ import lxml.html.builder
 
 0_0  # Python >= 3.6 is required
 
-h_head='''
+h_head = '''
 <head>
 </head>
 '''.strip()
 
-h_tail='''
+h_tail = '''
 </html>
 '''.strip()
 

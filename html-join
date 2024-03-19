@@ -10,7 +10,7 @@ import lxml.html.builder
 
 0_0  # Python >= 3.6 is required
 
-h_head='''
+h_head = '''
 <html>
 <head>
 <title></title>
@@ -19,7 +19,7 @@ h_head='''
 <body>
 '''.strip()
 
-h_tail='''
+h_tail = '''
 </body>
 </html>
 '''.strip()
