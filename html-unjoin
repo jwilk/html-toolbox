@@ -3,8 +3,8 @@
 # Copyright © 2022 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
 
-import os
 import argparse
+import os
 import sys
 
 import lxml.html.builder
